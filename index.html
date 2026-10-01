@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f7f6f2" />
+  <meta name="description" content="David's calculator: scientific calculations with persistent history." />
+  <title>David's calculator</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="config.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="app-header">
+      <a class="brand" href="./" aria-label="David's calculator home"><span class="brand-symbol" aria-hidden="true"><span>+</span><span>−</span><span>×</span><span>=</span></span><span class="brand-name">David's calculator</span></a>
+      <span id="connection-status" class="connection-status" data-state="checking" role="status"><span class="status-dot" aria-hidden="true"></span><span id="connection-text">Connecting</span></span>
+    </header>
+    <main>
+      <div class="workspace-heading">
+        <div><p class="eyebrow">A SPACE FOR CLEAR THINKING</p><h1>Calculate with Clarity<span class="heading-dot">.</span></h1><p class="workspace-description">Scientific expressions, clear results, and saved history.</p></div>
+        <div class="keyboard-hint"><kbd>Enter</kbd><span>Run</span><span class="hint-divider"></span><kbd>Esc</kbd><span>Clear</span></div>
+      </div>
+      <div class="workspace-grid">
+        <section class="calculator-panel" aria-label="Calculator workspace">
+          <div id="panel-calculation" class="mode-panel">
+            <form id="calculation-form" novalidate>
+              <div class="expression-area">
+                <div class="field-heading"><label for="expression">Expression</label><div class="angle-control" role="group" aria-label="Angle unit"><button type="button" data-angle="deg" aria-pressed="true" title="Use degrees">DEG</button><button type="button" data-angle="rad" aria-pressed="false" title="Use radians">RAD</button></div></div>
+                <textarea id="expression" rows="2" maxlength="512" placeholder="e.g. sin(30) + 2^3" spellcheck="false" autocapitalize="off" autocomplete="off" aria-describedby="expression-help calculation-message"></textarea>
+                <p id="expression-help" class="sr-only">Enter an expression, then press Enter to calculate. Use explicit multiplication, for example 2*pi or 2*(3+4). Press Escape to clear.</p>
+                <div class="result-area" aria-live="polite" aria-atomic="true"><div class="result-label"><span>Result</span><span id="calculation-state">Ready when you are</span></div><output id="result" for="expression">—</output></div>
+                <p id="calculation-message" class="calculation-message" role="alert" hidden></p>
+              </div>
+              <div class="scientific-keys" aria-label="Scientific functions">
+                <button type="button" class="function-key" data-key="sin(" aria-label="Sine">sin</button><button type="button" class="function-key" data-key="cos(" aria-label="Cosine">cos</button><button type="button" class="function-key" data-key="tan(" aria-label="Tangent">tan</button><button type="button" class="function-key" data-key="sqrt(" aria-label="Square root">√</button><button type="button" class="function-key" data-key="^" aria-label="Power">x<sup>y</sup></button><button type="button" class="function-key" data-key="!" aria-label="Factorial">n!</button>
+                <button type="button" class="function-key" data-key="arcsin(" aria-label="Inverse sine">arcsin</button><button type="button" class="function-key" data-key="arccos(" aria-label="Inverse cosine">arccos</button><button type="button" class="function-key" data-key="arctan(" aria-label="Inverse tangent">arctan</button><button type="button" class="function-key" data-key="abs(" aria-label="Absolute value">abs</button><button type="button" class="function-key" data-key="pi" aria-label="Pi">π</button><button type="button" class="function-key" data-key="e" aria-label="Euler's number">e</button>
+                <button type="button" class="function-key" data-key="ln(" aria-label="Natural logarithm">ln</button><button type="button" class="function-key" data-key="log(" aria-label="Base ten logarithm">log</button><button type="button" class="function-key" data-key="exp(" aria-label="Exponential function">exp</button><span class="function-note"> </span>
+              </div>
+              <div class="keypad" aria-label="Calculator keys">
+                <button type="button" class="key key-clear" data-action="clear" aria-label="Clear expression">AC</button><button type="button" class="key key-utility" data-key="(" aria-label="Open parenthesis">(</button><button type="button" class="key key-utility" data-key=")" aria-label="Close parenthesis">)</button><button type="button" class="key key-utility" data-action="backspace" aria-label="Backspace"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 5h11a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H9l-7-7 7-7Z"/><path d="m12 9 6 6m0-6-6 6"/></svg></button>
+                <button type="button" class="key" data-key="7">7</button><button type="button" class="key" data-key="8">8</button><button type="button" class="key" data-key="9">9</button><button type="button" class="key key-operator" data-key="÷" aria-label="Divide">÷</button>
+                <button type="button" class="key" data-key="4">4</button><button type="button" class="key" data-key="5">5</button><button type="button" class="key" data-key="6">6</button><button type="button" class="key key-operator" data-key="×" aria-label="Multiply">×</button>
+                <button type="button" class="key" data-key="1">1</button><button type="button" class="key" data-key="2">2</button><button type="button" class="key" data-key="3">3</button><button type="button" class="key key-operator" data-key="-" aria-label="Subtract">−</button>
+                <button type="button" class="key" data-key="0">0</button><button type="button" class="key" data-key=".">.</button><button id="calculate-button" type="submit" class="key key-equals" aria-label="Calculate">=</button><button type="button" class="key key-operator" data-key="+" aria-label="Add">+</button>
+              </div>
+            </form>
+            <details class="syntax-help"><summary>Syntax & shortcuts</summary><div><p>Use <code>sin(30)</code>, <code>sqrt(16)</code>, <code>log(100)</code>, <code>ln(e)</code>, or <code>5!</code>. Close each function's parenthesis.</p><p><strong>DEG / RAD</strong> controls trigonometric inputs and inverse-trigonometric outputs. <code>log</code> is base 10; <code>ln</code> is natural log.</p><p>Write multiplication explicitly: <code>2*pi</code>, <code>2*(3+4)</code>. Powers come before unary minus: <code>-2^2 = -4</code>, while <code>(-2)^2 = 4</code>.</p><p>Press <kbd>Enter</kbd> or <kbd>=</kbd> to calculate, and <kbd>Esc</kbd> to clear.</p></div></details>
+          </div>
+          <div class="calculator-footer"><span class="mini-dot" aria-hidden="true"></span><span>Results are saved automatically</span><span id="footer-mode" class="footer-mode"> </span></div>
+        </section>
+        <aside class="history-panel" aria-labelledby="history-title">
+          <div class="history-header"><div><p class="eyebrow">YOUR PAPER TRAIL</p><h2 id="history-title">History <span id="history-count" class="count-badge">0</span></h2></div><button id="refresh-history" type="button" class="icon-button" aria-label="Refresh history" title="Refresh history"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M6.1 7a7 7 0 0 1 11.5-1L20 9M4 15l2.4 3A7 7 0 0 0 18 17"/></svg></button></div>
+          <button id="clear-history" type="button" class="clear-history-button" title="Permanently delete all saved history" disabled>Clear all</button>
+          <p class="history-description">Revisit a result, or clear all saved history.</p>
+          <p id="history-message" class="history-message" role="status" hidden></p>
+          <div id="history-list" class="history-list" aria-busy="true"></div>
+          <div id="history-empty" class="history-empty"><div class="empty-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="15"/><path d="M24 15v10l6 4M9 9v9h9"/></svg></div><h3 id="empty-title">Loading history</h3><p id="empty-description">Your saved results will appear here.</p></div>
+          <div class="history-footer"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 7V5a4 4 0 0 1 8 0v2M3 7h10v8H3z"/><path d="M8 10v2"/></svg><span>Kept safe, even after you close this tab.</span></div>
+        </aside>
+      </div>
+      <div class="workspace-footer"><span>Select a history entry to reuse its inputs.</span><span>David's calculator <span class="footer-separator"> </span>  </span></div>
+    </main>
+  </div>
+</body>
+</html>
