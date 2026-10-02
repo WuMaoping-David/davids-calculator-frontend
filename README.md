@@ -2,6 +2,12 @@
 
 ## Public deployment
 
+Verified public calculator: https://davids-calculator-frontend.onrender.com
+
+Verified API health: https://davids-calculator-backend.onrender.com/api/health
+
+Both services were live on October 2, 2026. Eleven cloud checks passed and saved history survived a Render restart.
+
 For a Render Static Site, set the build command to `node build-render.mjs`, publish directory to `dist`, and environment variable `API_BASE_URL` to the backend HTTPS origin without `/api`. The build writes production configuration separately from the local `config.js`. Add the actual frontend HTTPS origin to the backend `CORS_ORIGINS`. See [PUBLIC_DEPLOYMENT.md](PUBLIC_DEPLOYMENT.md) for persistence and verification requirements.
 
 ## Project introduction
@@ -149,7 +155,7 @@ Suggested acceptance checks:
 | An HTTPS page cannot reach the API | Use an HTTPS backend or a correctly configured same-origin reverse proxy |
 | History is unavailable | Inspect backend logs and its database path and write permissions |
 
-For public hosting, serve the static assets from a suitable web server and configure the actual publicly reachable backend URL. `localhost` in a public visitor's browser refers to that visitor's computer. Source publication on GitHub does not run the Java backend. Verify the actual public URLs after deployment; a successful local preview does not establish cloud availability.
+For public hosting, serve the static assets from a suitable web server and configure the actual publicly reachable backend URL. `localhost` in a public visitor's browser refers to that visitor's computer. Source publication on GitHub does not run the Java backend. The public URLs above were verified separately from the local preview.
 
 There are no user accounts: history is shared by everyone accessing the same backend. CORS controls browser origins; it is not user authentication.
 
