@@ -3,6 +3,9 @@
 (() => {
   const $ = (selector) => document.querySelector(selector);
   const apiBaseUrl = (window.CALCULATOR_CONFIG?.apiBaseUrl || 'http://localhost:8080').replace(/\/+$/, '');
+  const configuredTimeout = window.CALCULATOR_CONFIG?.requestTimeoutMs;
+  const requestTimeout = Number.isInteger(configuredTimeout)
+      && configuredTimeout >= 1000 && configuredTimeout <= 120000 ? configuredTimeout : 10000;
   const expressionInput = $('#expression');
   const historyList = $('#history-list');
   const historyEmpty = $('#history-empty');
@@ -30,7 +33,7 @@
 
   async function request(path, options = {}) {
     const controller = new AbortController();
-    const timeout = window.setTimeout(() => controller.abort(), 10000);
+    const timeout = window.setTimeout(() => controller.abort(), requestTimeout);
     try {
       const response = await fetch(`${apiBaseUrl}${path}`, {
         ...options, signal: controller.signal, cache: 'no-store',

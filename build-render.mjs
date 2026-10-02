@@ -10,5 +10,5 @@ await mkdir('dist', { recursive: true });
 for (const file of ['index.html', 'styles.css', 'app.js', 'favicon.svg']) {
   await copyFile(file, `dist/${file}`);
 }
-await writeFile('dist/config.js', `window.CALCULATOR_CONFIG = Object.freeze(${JSON.stringify({apiBaseUrl: url.origin})});\n`);
+await writeFile('dist/config.js', `window.CALCULATOR_CONFIG = Object.freeze(${JSON.stringify({apiBaseUrl: url.origin, requestTimeoutMs: 120000})});\n`);
 console.log(`Frontend built for ${url.origin}`);

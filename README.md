@@ -18,9 +18,9 @@ The current version supports arithmetic, parentheses, decimals, unary signs, pow
 | Browser logic | Plain JavaScript, Fetch API, and JSON; no client-side expression evaluator |
 | Local static server | Java JDK `HttpServer`, implemented in `tools/PreviewServer.java` |
 | Calculation service | Separate Java HTTP API, normally on port 8080 |
-| Persistence | H2 file database managed exclusively by the backend |
+| Persistence | Local H2 or cloud PostgreSQL, managed exclusively by the backend |
 
-No npm packages, Node.js runtime, frontend framework, or frontend build tool is required. The Java preview server only serves static assets; it performs no calculations.
+Local preview requires no npm packages, Node.js runtime, or frontend framework. The optional Render production build uses Node.js to copy assets and generate configuration, without npm dependencies. The Java preview server only serves static assets; it performs no calculations.
 
 ## Runtime environment
 
@@ -122,7 +122,7 @@ A calculation succeeds with HTTP 201 and `{"success":true,"data":record}`. Histo
 - DEG/RAD controls trigonometric inputs and inverse-trigonometric outputs. `log` is base 10; `ln` is natural logarithm.
 - Select a calculation in history to restore its expression and angle mode without automatically submitting it.
 - **Clear all** immediately deletes all saved history in the backend database. It is disabled for empty history and while a local calculation or deletion is pending. Single-record deletion remains available.
-- Delayed responses do not overwrite results for edited input. Requests have a ten-second timeout. If a request times out, refresh history before retrying to check whether the server already saved it.
+- Delayed responses do not overwrite results for edited input. Local requests have a ten-second timeout. Render builds configure a 120-second timeout to allow free services to wake after idle periods; `requestTimeoutMs` can be configured between 1000 and 120000 milliseconds. If a request times out, refresh history before retrying to check whether the server already saved it.
 
 Suggested acceptance checks:
 
@@ -149,7 +149,7 @@ Suggested acceptance checks:
 | An HTTPS page cannot reach the API | Use an HTTPS backend or a correctly configured same-origin reverse proxy |
 | History is unavailable | Inspect backend logs and its database path and write permissions |
 
-For public hosting, serve the static assets from a suitable web server and configure the actual publicly reachable backend URL. `localhost` in a public visitor's browser refers to that visitor's computer. Source publication on GitHub does not run the Java backend. Public deployment URLs have not been verified for this project.
+For public hosting, serve the static assets from a suitable web server and configure the actual publicly reachable backend URL. `localhost` in a public visitor's browser refers to that visitor's computer. Source publication on GitHub does not run the Java backend. Verify the actual public URLs after deployment; a successful local preview does not establish cloud availability.
 
 There are no user accounts: history is shared by everyone accessing the same backend. CORS controls browser origins; it is not user authentication.
 
